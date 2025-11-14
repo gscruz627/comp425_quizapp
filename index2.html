@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Quiz Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./index2.css"/>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img width="100px" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcoloropedia.com%2Fwp-content%2Fuploads%2F2021%2F12%2Fsouthwest-minnesota-state-mustangs-logo.png&f=1&nofb=1&ipt=1b02af2c13a8a88c0788fc27f2bca458f33f885ea7de5254c992eecdc4c6518e"/>
+            <h1>Quick Quiz</h1>
+            <p>Generate quizzes on any subject using AI</p>
+        </header>
+
+        <div class="card">
+            <h2><i class="fas fa-cogs"></i> Configure the quiz</h2>
+            <form id="quiz-form">
+                <div class="form-group">
+                    <label for="subject">Select a Predefined Subject</label>
+                    <div class="subject-grid">
+                        <div class="subject-card" data-subject="science" onclick="getPregeneratedQuiz('science')">
+                            <div class="subject-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="subject-name">Science</div>
+                        </div>
+                        <div class="subject-card" data-subject="history" onclick="getPregeneratedQuiz('history')">
+                            <div class="subject-icon">
+                                <i class="fas fa-monument"></i>
+                            </div>
+                            <div class="subject-name">History</div>
+                        </div>
+                        <div class="subject-card" data-subject="mathematics" onclick="getPregeneratedQuiz('mathematics')">
+                            <div class="subject-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="subject-name">Mathematics</div>
+                        </div>
+                        <div class="subject-card" data-subject="literature" onclick="getPregeneratedQuiz('literature')">
+                            <div class="subject-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="subject-name">Literature</div>
+                        </div>
+                        <div class="subject-card" data-subject="geography" onclick="getPregeneratedQuiz('geography')">
+                            <div class="subject-icon">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <div class="subject-name">Geography</div>
+                        </div>
+                        <div class="subject-card" data-subject="technology" onclick="getPregeneratedQuiz('technology')">
+                            <div class="subject-icon">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <div class="subject-name">Technology</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="subject" name="subject" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt">Custom Topic (Optional)</label>
+                    <textarea id="prompt" name="prompt"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="questions">Number of Questions</label>
+                        <input 
+                            type="number" 
+                            id="questions" 
+                            name="questions" 
+                            min="3" 
+                            max="20" 
+                            value="5" 
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level</label>
+                        <select id="difficulty" name="difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="generate-btn" style="display:inline">
+                    <i class="fas fa-robot"></i> Generate Quiz
+                </button>
+
+                <button type="button" id="action-btn" onclick="generatePDF()">
+                    <i class="fa-solid fa-file-pdf"></i> Save as PDF
+                </button>
+            </form>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>AI is generating your quiz... This may take a few seconds</p>
+        </div>
+
+        <div class="card quiz-results" id="quiz-results">
+            <div class="quiz-header">
+                <h2 class="quiz-title" id="quiz-topic">Quiz Result</h2>
+                <div class="quiz-stats">
+                    <span id="current-question">1</span> of <span id="total-questions">5</span>
+                </div>
+            </div>
+
+            <div id="question-container">
+                <!-- Questions will be inserted here by JavaScript -->
+                  <div class="question-container">
+                    <p class="question-text">1. What is the capital of France ?</p>
+                    <ul class="options-list">
+                        <li class="option" onclick="clickAnswer(0)"><span class="option-label">A</span> Paris</li>
+                        <li class="option" onclick="clickAnswer(1)"><span class="option-label">B</span> London</li>
+                        <li class="option" onclick="clickAnswer(2)"><span class="option-label">C</span> Rome</li>
+                        <li class="option" onclick="clickAnswer(3)"><span class="option-label">D</span> Berlin</li>
+                    </ul>
+                    <div class="feedback correct">Correct! Paris is the capital of France.</div>
+                    <div class="feedback incorrect">Incorrect. The correct answer is Paris.</div>
+                </div>
+            </div>
+
+            <div class="score-container" id="score-container">
+                <p class="score-text" id="score-text">Your Score: 0/5</p>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="action-btn" id="next-btn" onclick="moveQuestion()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="./index.js"></script>\
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.2/jspdf.umd.min.js"></script>
+</body>
+</html>
