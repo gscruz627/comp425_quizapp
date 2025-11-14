@@ -1,6 +1,6 @@
 let form = document.getElementById("quiz-form");
 let resultContainer = document.getElementById("question-container");
-const PROXY_URL = "http://localhost:8000";
+const PROXY_URL = "https://comp425-quizapp.onrender.com";
 
 let questions = [];
 let questionText = "";
