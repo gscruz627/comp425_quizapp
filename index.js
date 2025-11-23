@@ -87,12 +87,16 @@ async function generateQuiz(prompt, numberOfQuestions, difficulty){
 }
 
 function getPregeneratedQuiz(topic){
+    console.log(questions);
     questions = [];
     questionsCorrect = 0;
     questionIndex = 0;
     questionText = "";
+    document.getElementById("summary-content").innerHTML = "";
+    document.getElementById("summary-section").style.display = "none";
     document.getElementById("score-container").style.display = "none";
     document.getElementById("quiz-results").style.display = "block";
+    document.getElementById("next-btn").style.display = "block";
     questions = [];
     questionsCorrect = 0;
     questionIndex = 0;
@@ -108,6 +112,7 @@ function getPregeneratedQuiz(topic){
     }
     // At this point, all questions are in object format. We proceed to display the quiz with the initial question.
     questionIndex = 0;
+    document.getElementById("question-container").style.display = "block";
     displayQuestion(0);
     document.getElementById("action-btn").style.display = "inline";
 }
@@ -141,6 +146,7 @@ function clickAnswer(i){
         document.querySelectorAll(".feedback.incorrect")[0].style.display = "block";
         document.querySelectorAll(".feedback.incorrect")[0].innerHTML = "Incorrect. " + questions[questionIndex].answers[questions[questionIndex].correctIndex] + " was the correct answer";
     }
+    questions[questionIndex].triedAnswer = i;
     console.log(questionsCorrect);
 }
 
@@ -156,8 +162,47 @@ function moveQuestion(){
         document.getElementById("question-container").style.display = "none";
         document.getElementById("score-container").style.display = "block";
 
-        document.getElementById("score-text").innerHTML = "Your Score: " + questionsCorrect + "/" + questionsTotal + ` ( ${(questionsCorrect/questionsTotal)*100}% )`;
+        document.getElementById("score-text").innerHTML = "Your Score: " + questionsCorrect + "/" + questionsTotal + ` ( ${((questionsCorrect/questionsTotal)*100).toFixed(1)}% )`;
         document.getElementById("next-btn").style.display = "none";
+
+        // Display summary
+        document.getElementById('summary-section').style.display = "block";
+        for(let i = 0; i < questionsTotal; i++){
+            // create question container
+            let questionLocal = questions[i];
+            let questionElement = document.createElement("div");
+            questionElement.className = "question-container";
+            
+            // create question title
+            let questionText = document.createElement("p");
+            questionText.className = "question-text";
+            questionText.innerHTML = (i+1) + "." + questionLocal.question;
+            questionElement.appendChild(questionText);
+            
+            // create all four answers
+            let questionUl = document.createElement("ul");
+            questionUl.className = "options-list"
+            for(let j = 0; j < 4; j++){
+                let questionLi = document.createElement("li");
+                questionLi.className = "option";
+                questionLi.innerHTML = questionLocal.answers[j];
+                // color the correct answer in green
+                if(j == questionLocal.correctIndex){
+                    questionLi.style.backgroundColor = "#d4edda";
+                    questionLi.style.color = "#155724"
+                }
+                questionUl.appendChild(questionLi);
+            }
+            // if the question was incorrectly answered, mark the incorrect answer as red, otherwise
+            // leave the correct answer as the only one that is colored (in green)
+            if(questionLocal.correctIndex !== questionLocal.triedAnswer){
+                let lis = questionUl.getElementsByTagName("li");
+                lis[questionLocal.triedAnswer].style.backgroundColor = "#f8d7da";
+                lis[questionLocal.triedAnswer].style.color = "#721c24";
+            }
+            questionElement.appendChild(questionUl);
+            document.getElementById("summary-content").appendChild(questionElement);
+        }
         return;
     }
     questionIndex++;

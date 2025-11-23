@@ -15,11 +15,11 @@
             <p>Generate quizzes on any subject using AI</p>
         </header>
 
+        <form id="quiz-form">
         <div class="card">
-            <h2><i class="fas fa-cogs"></i> Configure the quiz</h2>
-            <form id="quiz-form">
+            <h2><i class="fas fa-cogs"></i> Predefined Quiz</h2>
                 <div class="form-group">
-                    <label for="subject">Select a Predefined Subject</label>
+                    <label for="subject">Select a Predefined Quiz (10 same medium questions)</label>
                     <div class="subject-grid">
                         <div class="subject-card" data-subject="science" onclick="getPregeneratedQuiz('science')">
                             <div class="subject-icon">
@@ -60,7 +60,10 @@
                     </div>
                     <input type="hidden" id="subject" name="subject" required>
                 </div>
+            </div>
+            <div class="card">
 
+                <h1>Custom Quiz</h1>
                 <div class="form-group">
                     <label for="prompt">Custom Topic (Optional)</label>
                     <textarea id="prompt" name="prompt"></textarea>
@@ -96,8 +99,8 @@
                 <button type="button" id="action-btn" onclick="generatePDF()">
                     <i class="fa-solid fa-file-pdf"></i> Save as PDF
                 </button>
-            </form>
-        </div>
+            </div>
+        </form>
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
@@ -137,6 +140,12 @@
                 </button>
             </div>
         </div>
+
+        <div class="summary-section" id="summary-section" style="display:none;">
+            <h2>Quiz Summary</h2>
+            <div id="summary-content"></div>
+        </div>
+
     </div>
     <script src="./index.js"></script>\
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.2/jspdf.umd.min.js"></script>
