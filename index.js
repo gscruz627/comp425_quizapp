@@ -34,6 +34,9 @@ async function generateQuiz(prompt, numberOfQuestions, difficulty){
     questionsCorrect = 0;
     questionIndex = 0;
     questionText = "";
+    document.getElementById("summary-content").innerHTML = "";
+    document.getElementById("summary-section").style.display = "none";
+    document.getElementById("score-container").style.display = "none";
     document.getElementById("quiz-results").style.display = "none";
     document.getElementById("score-container").style.display = "none";
     document.getElementById("loading").style.display = "block";
@@ -59,13 +62,18 @@ async function generateQuiz(prompt, numberOfQuestions, difficulty){
         const response = await request.json();
         // This has all the questions and answers in their format.
         const text = response["candidates"][0]["content"]["parts"][0].text;
+        console.log(text);
         questionText = text;
         const lines = text.split("\n");
+        console.log(lines)
         for(let i = 0; i < lines.length; i += 6){
             const question = lines[i];
             const answers = lines.slice(i + 1, i + 5);
             const correctIndex = parseInt(lines[i + 5], 10);
             questions.push({question: question, answers: answers, correctIndex: correctIndex})
+            console.log(`question: ${question}`)
+            console.log(`answers: ${answers}`)
+            console.log(`corIn: ${correctIndex}`)
         }
 
         questionsTotal = numberOfQuestions;
@@ -87,7 +95,6 @@ async function generateQuiz(prompt, numberOfQuestions, difficulty){
 }
 
 function getPregeneratedQuiz(topic){
-    console.log(questions);
     questions = [];
     questionsCorrect = 0;
     questionIndex = 0;
@@ -119,13 +126,11 @@ function getPregeneratedQuiz(topic){
 function displayQuestion(i){
 
     document.getElementById("next-btn").setAttribute("disabled","true");
-    console.log(questions[i])
     document.getElementById("quiz-results").style.display = "block";
     document.getElementsByClassName("question-text")[0].innerHTML = (questionIndex + 1) + "." + questions[i].question;
     let options = document.getElementsByClassName("options-list")[0];
 
     // Setup all four possible answers
-    console.log(options.children);
     options.children[0].innerHTML = questions[i].answers[0];
     options.children[1].innerHTML = questions[i].answers[1];
     options.children[2].innerHTML = questions[i].answers[2];
@@ -147,16 +152,12 @@ function clickAnswer(i){
         document.querySelectorAll(".feedback.incorrect")[0].innerHTML = "Incorrect. " + questions[questionIndex].answers[questions[questionIndex].correctIndex] + " was the correct answer";
     }
     questions[questionIndex].triedAnswer = i;
-    console.log(questionsCorrect);
 }
 
 function moveQuestion(){
 
     document.querySelector(".feedback.correct").style.display = "none";
     document.querySelector(".feedback.incorrect").style.display = "none";
-    console.log(questionIndex);
-    console.log(questionsTotal);
-    console.log(questionIndex >= questionsTotal-1)
     if(questionIndex >= questionsTotal-1){
         // quiz is over, display results
         document.getElementById("question-container").style.display = "none";
